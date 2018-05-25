@@ -1,0 +1,11 @@
+.menu-box {
+    display: inline-block;
+    width: 120px;
+    border: 1px solid #ddd;
+}
+
+.main-box {
+    padding: 10px;
+    display: inline-block;
+    vertical-align: top;
+}
