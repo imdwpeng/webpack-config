@@ -27,6 +27,7 @@ module.exports = {
           {
             loader: 'css-loader',
             options: {
+              modules: true, // css module
               minimize: true // 压缩代码
             }
           },
@@ -43,6 +44,7 @@ module.exports = {
           {
             loader: 'css-loader',
             options: {
+              modules: true, // css module
               minimize: true
             }
           },
