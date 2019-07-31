@@ -11,6 +11,7 @@ module.exports = {
     "jasmine": true
   },
   "rules": {
+    "jsx-a11y/media-has-caption":[0],
     "react/no-access-state-in-setstate": [0], // 阻止在this.setState中使用this.state
     "react/destructuring-assignment": [0], // 解构赋值
     "linebreak-style": ["off", "windows"],

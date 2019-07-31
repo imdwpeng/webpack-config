@@ -6,9 +6,7 @@ module.exports = {
   mode: 'development',
   // 要打包的模块
   entry: {
-    vendor: Object.keys(pkg.dependencies).filter((item) => {
-      return !item.includes('babel');
-    }) // 遍历package.json的所有dependencies依赖包
+    vendor: Object.keys(pkg.dependencies) // 遍历package.json的所有dependencies依赖包
   },
   output: {
     path: path.resolve(__dirname, 'dist'), // 打包后文件输出目录

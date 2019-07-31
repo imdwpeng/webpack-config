@@ -4,7 +4,7 @@ class App extends Component {
   render() {
     return (
       <div>
-        Webpack4 + Babel8 + React + Eslint
+        Webpack4 + Babel8 + React16 + Eslint
       </div>
     );
   }

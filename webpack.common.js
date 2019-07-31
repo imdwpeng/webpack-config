@@ -1,20 +1,15 @@
 const path = require('path');
 const webpack = require('webpack');
-const HtmlWebpackPlugin = require('html-webpack-plugin'); // 自动生成html首页
 const MiniCssExtractPlugin = require('mini-css-extract-plugin'); //
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const HappyPack = require('happypack');
-const os = require('os');
-// 获取电脑的处理器有几个核心，作为配置传入
-const happyThreadPool = HappyPack.ThreadPool({ size: os.cpus().length }); // 共享进程池，进程池中包含os.cpus().length个子进程
 
 module.exports = {
   entry: {
     index: './src/index.js'
   },
   output: {
-    chunkFilename: '[name].[hash].js',
-    filename: '[name].[hash].js',
+    chunkFilename: 'html/chunk/chunk.[name].js',
+    filename: 'html/js/[name].[hash].js',
     path: path.resolve(__dirname, 'dist')
   },
   module: {
@@ -33,8 +28,21 @@ module.exports = {
           },
           'postcss-loader'
         ],
-        include: path.resolve(__dirname, 'src'), // 限制范围，提高打包速度
+        include: path.resolve(__dirname, 'src'),
         exclude: /node_modules/
+      },
+      {// antd样式处理
+        test: /\.css$/,
+        exclude: /src/,
+        use: [
+          { loader: 'style-loader' },
+          {
+            loader: 'css-loader',
+            options: {
+              importLoaders: 1
+            }
+          }
+        ]
       },
       {
         test: /\.less/,
@@ -44,7 +52,8 @@ module.exports = {
           {
             loader: 'css-loader',
             options: {
-              modules: true, // css module
+              modules: true,
+              localIdentName: '[local]__[hash:base64:5]',
               minimize: true
             }
           },
@@ -73,7 +82,7 @@ module.exports = {
       },
       {
         test: /\.js[x]?$/,
-        loader: 'happypack/loader?id=babel', // 把对.js文件的处理转交给id为babel的HappyPack实例
+        loader: 'babel-loader',
         include: path.resolve(__dirname, 'src'),
         exclude: /node_modules/
       },
@@ -101,14 +110,20 @@ module.exports = {
       }
     ]
   },
+  externals: {
+    BMap: 'BMap',
+    BMapLib: 'BMapLib'
+  },
+  resolve: {
+    alias: {
+      static: path.resolve(__dirname, 'static')
+    }
+  },
   plugins: [
-    new HtmlWebpackPlugin({
-      title: 'webpack demo'
-    }),
     // 分离css
     new MiniCssExtractPlugin({
-      filename: '[name].css',
-      chunkFilemane: '[id].css'
+      filename: 'html/css/[name].[hash].css',
+      chunkFilemane: 'html/chunk/[name].[hash].css'
     }),
     new webpack.ProvidePlugin({
       _: 'lodash' // 所有页面都引入 _ 变量，不用再import
@@ -120,24 +135,6 @@ module.exports = {
         to: path.resolve(__dirname, 'dist/static'),
         ignore: ['.*']
       }
-    ]),
-    // 开启多进程打包
-    new HappyPack({
-      id: 'babel', // 对应上面loader配置中的?id=babel
-      loaders: ['babel-loader?cacheDirectory'],
-      threadPool: happyThreadPool // 使用共享进程池中的子进程去处理任务
-    })
-  ],
-  optimization: {
-    splitChunks: {
-      cacheGroups: {
-        common: { // 抽离自己写的公共代码，common这个名字可以随意起
-          chunks: 'initial',
-          name: 'common', // 任意命名
-          minChunks: 2, // 共享模块的chunks的最小数目
-          minSize: 0 // 只要超出0字节就生成一个新包
-        }
-      }
-    }
-  }
+    ])
+  ]
 };
