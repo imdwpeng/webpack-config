@@ -31,7 +31,8 @@ module.exports = {
         include: path.resolve(__dirname, 'src'),
         exclude: /node_modules/
       },
-      {// antd样式处理
+      {
+        // 引入antd样式
         test: /\.css$/,
         exclude: /src/,
         use: [
@@ -40,6 +41,24 @@ module.exports = {
             loader: 'css-loader',
             options: {
               importLoaders: 1
+            }
+          }
+        ]
+      },
+      {
+        // 定制antd主题
+        test: /\.less$/,
+        include: /node_modules/,
+        use: [
+          MiniCssExtractPlugin.loader, // 分离css
+          'css-loader',
+          {
+            loader: 'less-loader',
+            options: {
+              modifyVars: {
+                'primary-color': 'black'
+              },
+              javascriptEnabled: true
             }
           }
         ]
