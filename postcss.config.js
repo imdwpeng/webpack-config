@@ -1,5 +1,11 @@
+/*
+ * @Author: Dong
+ * @Date: 2020-09-06 11:41:08
+ * @LastEditors: Dong
+ * @LastEditTime: 2020-09-06 11:41:13
+ */
 module.exports = {
-    plugins: [
-        require('autoprefixer')    // 自动添加css前缀
-    ]
+  plugins: {
+    autoprefixer: {}
+  }
 };
