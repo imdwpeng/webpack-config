@@ -1,30 +1,40 @@
+/*
+ * @Author: Dong
+ * @Date: 2021-01-13 16:01:54
+ * @LastEditors: Dong
+ * @LastEditTime: 2021-01-13 16:40:49
+ */
 const path = require('path');
 const webpack = require('webpack');
 const merge = require('webpack-merge');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const common = require('./webpack.common');
 
 module.exports = merge(common, {
+  mode: 'none',
+  entry: {
+    index: './src/index.js',
+    'index.min': './src/index.js'
+  },
   output: {
-    publicPath: '/' // 静态资源CDN地址
+    path: path.resolve(__dirname, 'dist'),
+    filename: '[name].js',
+    libraryExport: 'default', // 直接对外暴露default属性，可直接调用 new Demo()
+    library: 'Demo', // 组件名称
+    libraryTarget: 'umd' // 采用UMD模式打包，同时支持CommonJS、AMD和全局变量模式
   },
   devtool: 'cheap-module-source-map',
-  mode: 'production',
   plugins: [
     // 清空dist文件夹
-    new CleanWebpackPlugin(['dist']),
-    new webpack.HashedModuleIdsPlugin(),
-    // 如果是多页面的html，则多次new HtmlWebpackPlugin
-    new HtmlWebpackPlugin({
-      template: path.resolve(__dirname, 'public', 'index.html'), // html模板，如设置该参数，则按该模板来，忽略下面的title参数
-      // favicon: path.resolve(__dirname, 'public', 'favicon.ico'),
-      title: 'webpack demo', // html标题
-      filename: 'index.html', // 生成html的名称，默认index.html
-      chunks: ['index', 'vendor'], // 指定引入文件，默认引入所有
-      minify: { // 压缩，默认false
-        removeAttributeQuotes: true // 移除属性的引号
-      }
-    })
-  ]
+    new CleanWebpackPlugin(['dist'])
+  ],
+  optimization: {
+    minimize: true,
+    minimizer: [
+      new UglifyJsPlugin({
+        include: /\.min\.js$/
+      })
+    ]
+  }
 });

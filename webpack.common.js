@@ -1,7 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin'); //
-const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   entry: {
@@ -129,31 +128,13 @@ module.exports = {
       }
     ]
   },
-  externals: {
-    BMap: 'BMap',
-    BMapLib: 'BMapLib'
-  },
-  resolve: {
-    alias: {
-      static: path.resolve(__dirname, 'static')
-    }
-  },
   plugins: [
     // 分离css
     new MiniCssExtractPlugin({
-      filename: 'html/css/[name].[hash].css',
-      chunkFilemane: 'html/chunk/[name].[hash].css'
+      filename: '[name].css'
     }),
     new webpack.ProvidePlugin({
       _: 'lodash' // 所有页面都引入 _ 变量，不用再import
-    }),
-    // 约定将公共资源放static中，打包时复制static中的资源到dist/static中
-    new CopyWebpackPlugin([
-      {
-        from: path.resolve(__dirname, 'static'),
-        to: path.resolve(__dirname, 'dist/static'),
-        ignore: ['.*']
-      }
-    ])
+    })
   ]
 };
