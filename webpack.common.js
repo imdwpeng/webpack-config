@@ -1,15 +1,14 @@
 const path = require('path');
 const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin'); //
-const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   entry: {
     index: './src/index.js'
   },
   output: {
-    chunkFilename: 'html/chunk/chunk.[name].js',
-    filename: 'html/js/[name].[hash].js',
+    chunkFilename: 'chunk/chunk.[name].js',
+    filename: 'js/[name].[contenthash].js',
     path: path.resolve(__dirname, 'dist')
   },
   module: {
@@ -72,7 +71,7 @@ module.exports = {
             loader: 'css-loader',
             options: {
               modules: true,
-              localIdentName: '[local]__[hash:base64:5]',
+              localIdentName: '[local]__[contenthash:base64:5]',
               minimize: true
             }
           },
@@ -129,10 +128,6 @@ module.exports = {
       }
     ]
   },
-  externals: {
-    BMap: 'BMap',
-    BMapLib: 'BMapLib'
-  },
   resolve: {
     alias: {
       static: path.resolve(__dirname, 'static')
@@ -141,19 +136,11 @@ module.exports = {
   plugins: [
     // 分离css
     new MiniCssExtractPlugin({
-      filename: 'html/css/[name].[hash].css',
-      chunkFilemane: 'html/chunk/[name].[hash].css'
+      filename: 'html/css/[name].[contenthash].css',
+      chunkFilename: 'html/chunk/[name].[contenthash].css'
     }),
     new webpack.ProvidePlugin({
       _: 'lodash' // 所有页面都引入 _ 变量，不用再import
-    }),
-    // 约定将公共资源放static中，打包时复制static中的资源到dist/static中
-    new CopyWebpackPlugin([
-      {
-        from: path.resolve(__dirname, 'static'),
-        to: path.resolve(__dirname, 'dist/static'),
-        ignore: ['.*']
-      }
-    ])
+    })
   ]
 };

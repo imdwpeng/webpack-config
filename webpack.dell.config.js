@@ -1,9 +1,14 @@
+/*
+ * @Author: DWP
+ * @Date: 2021-08-12 14:49:24
+ * @LastEditors: DWP
+ * @LastEditTime: 2021-08-12 15:32:35
+ */
 const path = require('path');
 const webpack = require('webpack');
 const pkg = require('./package.json');
 
 module.exports = {
-  mode: 'development',
   // 要打包的模块
   entry: {
     vendor: Object.keys(pkg.dependencies) // 遍历package.json的所有dependencies依赖包

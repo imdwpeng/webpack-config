@@ -1,5 +1,8 @@
-# webpack-config
+<!--
+ * @Author: DWP
+ * @Date: 2021-08-12 14:49:24
+ * @LastEditors: DWP
+ * @LastEditTime: 2021-08-12 15:00:36
+-->
+webpack@4-->@5
 
-Webpack v4 config. Distinguish between development and production.
-
-`Webpack4` + `Babel8` + `React` + `Eslint`
